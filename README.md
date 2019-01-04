@@ -64,5 +64,18 @@ function makeIterator(array) {
   };
 }
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-## Learn More
+##上面代码中，对象obj是可遍历的（iterable），因为具有Symbol.iterator属性。执行这个属性，会返回一个遍历器对象。该对象的根本特征就是具有next方法。每次调用next方法，都会返回一个代表当前成员的信息对象，具有value和done两个属性。
+
+##ES6 的有些数据结构原生具备 Iterator 接口（比如数组），即不用任何处理，就可以被for...of循环遍历。原因在于，这些数据结构原生部署了Symbol.iterator属性（详见下文），另外一些数据结构没有（比如对象）。凡是部署了Symbol.iterator属性的数据结构，就称为部署了遍历器接口。调用这个接口，就会返回一个遍历器对象。
+
+##原生具备 Iterator 接口的数据结构如下。
+
+##Array
+##Map
+##Set
+##String
+##TypedArray
+##函数的 arguments 对象
+##NodeList 对象
+##Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+ ##Learn More
