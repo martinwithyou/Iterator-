@@ -79,3 +79,5 @@ function makeIterator(array) {
 ##NodeList 对象
 ##Note: this is a one-way operation. Once you `eject`, you can’t go back!**
  ##Learn More
+
+ ##JS原型链简单图解
