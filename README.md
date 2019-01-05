@@ -98,6 +98,116 @@ function makeIterator(array) {
     function Empty() {}
 原型链，如此而已。
 
-对于新人来说，JavaScript的原型是一个很让人头疼的事情，一来prototype容易与__proto__混淆，二来它们之间的各种指向实在有些复杂，其实市面上已经有非常多的文章在尝试说清楚，有一张所谓很经典的图，上面画了各种线条，一会连接这个一会连接那个，说实话我自己看得就非常头晕，更谈不上完全理解了。所以我自己也想尝试一下，看看能不能把原型中的重要知识点拆分出来，用最简单的图表形式说清楚。
+对于新人来说，JavaScript的原型是一个很让人头疼的事情，
+一来prototype容易与__proto__混淆，
+二来它们之间的各种指向实在有些复杂，
+其实市面上已经有非常多的文章在尝试说清楚，
+有一张所谓很经典的图，
+上面画了各种线条，
+一会连接这个一会连接那个，
+说实话我自己看得就非常头晕，
+更谈不上完全理解了。
+所以我自己也想尝试一下，
+看看能不能把原型中的重要知识点拆分出来，
+用最简单的图表形式说清楚。
 
-我们知道原型是一个对象，其他对象可以通过它实现属性继承。但是尼玛除了prototype，又有一个__proto__是用来干嘛的？长那么像，让人怎么区分呢？它们都指向谁，那么混乱怎么记啊？原型链又是什么鬼？相信不少初学者甚至有一定经验的老鸟都不一定能完全说清楚，下面用三张简单的图，配合一些示例代码来理解一下
+我们知道原型是一个对象，
+其他对象可以通过它实现属性继承。
+但是尼玛除了prototype，
+又有一个__proto__是用来干嘛的？
+长那么像，让人怎么区分呢？
+它们都指向谁，
+那么混乱怎么记啊？
+原型链又是什么鬼？
+相信不少初学者甚至有一定经验的老鸟都不一定能完全说清楚，
+下面用三张简单的图，
+配合一些示例代码来理解一下.
+
+本文尝试阐述
+Js中原型（prototype）、
+原型链（prototype chain）等概念及其作用机制。
+上一篇文章（图解Javascript上下文与作用域）
+介绍了Js中变量作用域的相关概念，
+实际上关注的一个核心问题是：
+“在执行当前这行代码时Js解释器可以获取哪些变量”，
+而原型与原型链实际上还是关于这一问题。
+
+我们知道，
+在Js中一切皆为对象（Object），
+但是Js中并没有类（class）；
+Js是基于原型（prototype-based）
+来实现的面向对象（OOP）的编程范式的，
+但并不是所有的对象都拥有prototype这一属性：
+
+prototype是每个function定义时自带的属性，
+但是Js中function本身也是对象，
+我们先来看一下下面几个概念的差别
+function、
+Function、
+Object和{}
+function是Js的一个关键词，用于定义函数类型的变量，有两种语法形式：
+
+实际上Function就是一个用于构造函数类型变量的类，
+或者说是函数类型实例的构造函数（constructor）；
+与之相似有的Object或String、Number等，
+都是Js内置类型实例的构造函数。
+比较特殊的是Object，
+它用于生成对象类型，
+其简写形式为{}：
+
+prototype和length是每一个函数类型自带的两个属性，
+而其它非函数类型并没有（开头的例子已经说明），
+这一点之所以比较容易被忽略或误解，
+是因为所有类型的构造函数本身也是函数，
+所以它们自带了prototype属性：
+
+除了prototype之外，
+Js中的所有对象（undefined、null等特殊情况除外）都有一个内置的[[Prototype]]属性，
+指向它“父类”的prototype，
+这个内置属性在ECMA标准中并没有给出明确的获取方式，
+但是许多Js的实现（如Node、大部分浏览器等）
+都提供了一个__proto__属性来指代这一[[Prototype]]，
+我们通过下面的例子来说明实例中
+的__proto__是如何指向构造函数的prototype的：
+
+    var Person = function(){};
+    Person.prototype.type = 'Person';
+    Person.prototype.maxAge = 100;
+
+    var p = new Person();
+    console.log(p.maxAge);
+    console.log(p.type);
+    p.name = 'rainy';
+    console.log(p.name);
+
+    console.log(Person.prototype.constructor === Person)  //=> true
+    console.log(p.__proto__ === Person.prototype)        //=> true
+    console.log(p.prototype);
+
+__proto__
+
+Person是一个函数类型的变量，
+因此自带了prototype属性，
+prototype属性中的constructor又指向Person本身；
+通过new关键字生成的Person类的实例p1，
+通过__proto__属性指向了Person的原型。
+这里的__proto__只是为了说明实例p1在内部实现的时候与父类之间存在的关联（
+指向父类的原型），
+在实际操作过程中实例可以直接通过.
+获取父类原型中的属性，
+从而实现了继承的功能。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+执行上下文（简称上下文）决定了Js执行过程中可以获取哪些变量、函数、数据，一段程序可能被分割成许多不同的上下文，每一个上下文都会绑定一个变量对象（variable object），它就像一个容器，用来存储当前上下文中所有已定义或可获取的变量、函数等。位于最顶端或最外层的上下文称为全局上下文（global context），全局上下文取决于执行环境，如Node中的global和Browser中的window：
