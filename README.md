@@ -197,6 +197,40 @@ prototype属性中的constructor又指向Person本身；
 获取父类原型中的属性，
 从而实现了继承的功能。
 
+原型链
+
+清楚了prototype与__proto__的概念与关系之后
+我们会对“Js中一切皆为对象”这句话有更加深刻的理解。
+进而我们会想到，
+既然__proto__是（几乎）所有对象都内置的属性，
+而且指向父类的原型，
+那是不是意味着我们可以“逆流而上”一直找到源头呢？
+我们来看下面的例子
+
+    var Obj = function(){};
+    var o = new Obj();
+    console.log(o.__proto__ === Obj.prototype) //=> true
+    console.log(o.__proto__.constructor === Obj)//=> true
+
+    console.log(Obj.__proto__ === Function.prototype) //=> true
+    console.log(Obj.__proto__.constructor === Function) //=> true
+
+    console.log(Function.__proto__ === Function.prototype) //=> true
+    console.log(Object.__proto__ === Object.prototype)    //=> false
+    console.log(Object.__proto__ === Function.prototype)  //=> true
+
+    console.log(Function.__proto__.constructor === Function)//=> true
+    console.log(Function.__proto__.__proto__)               //=> {}
+    console.log(Function.__proto__.__proto__ === o.__proto__.__proto__) //=> true
+    console.log(o.__proto__.__proto__.__proto__ )
+
+
+从上面的例子和图解可以看出，prototype对象也有__proto__属性，向上追溯一直到null。
+new关键词的作用就是完成上图所示实例与父类原型之间关系的串接，
+并创建一个新的对象；i
+nstanceof关键词的作用也可以从上图中看出，
+实际上就是判断__proto__（以及__proto__.__proto__...）所指向是否父类的原型：
+
 
 
 
