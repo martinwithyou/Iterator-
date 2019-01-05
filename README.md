@@ -81,3 +81,19 @@ function makeIterator(array) {
  ##Learn More
 
  ##JS原型链简单图解
+ JS中原型链，说简单也简单。
+
+首先明确： 函数（Function）才有prototype属性，对象（除Object）拥有__proto__。
+
+首先，我画了一张图。
+所谓原型链，指的就是图中的proto这一条指针链！
+
+原型链的顶层就是Object.prototype，而这个对象的是没有原型对象的。
+
+可在chrome的控制台里面输入：
+
+    Object.__proto__
+输出是:
+
+    function Empty() {}
+原型链，如此而已。
